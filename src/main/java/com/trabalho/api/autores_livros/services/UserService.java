@@ -27,12 +27,19 @@ public class UserService {
         if(userRepository.findByEmail(userContent.email()).isPresent()){
             throw new RuntimeException("Email ja cadastrado!");
         }
+
+        System.out.println("Cadastrando user: " + userContent.email());
+
         User user = new User(userContent.email(), userContent.password());
         user.setApiKey(generateApiKey());
 
         User savedUser = userRepository.save(user);
 
+        System.out.println("User salvo com sucesso: " + savedUser.getEmail());
+
         emailService.sendWelcomeEmail(savedUser.getEmail());
+
+        System.out.println("Resposta do cadastro retornada para: " + savedUser.getEmail());
 
         return new ResponseUser(savedUser.getEmail(), savedUser.getId(), savedUser.getApiKey());
     }
